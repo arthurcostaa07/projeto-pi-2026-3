@@ -1,0 +1,25 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+# Home page
+GET     /                                       Application.index
+
+# Medicamentos
+GET     /medicamentos                           Medicamentos.listar
+GET     /medicamentos/form                      Medicamentos.form
+POST    /medicamentos/salvar                    Medicamentos.salvar
+
+# Categorias
+GET     /categorias/form                        Categorias.form
+POST    /categorias/salvar                      Categorias.salvar
+GET     /categorias/listar                      Categorias.listar
+
+# Ignore favicon requests
+GET     /favicon.ico                            404
+
+# Map static resources
+GET     /public/                                staticDir:public
+
+# Catch all — sempre por último
+*       /{controller}/{action}                  {controller}.{action}

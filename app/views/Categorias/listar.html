@@ -1,0 +1,31 @@
+#{extends 'main.html' /}
+#{set title:'Categorias' /}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="text-success mb-0">Categorias</h1>
+    <a class="btn btn-success" href="@{Categorias.form()}">Nova Categoria</a>
+</div>
+
+#{list items:categorias, as:'categoria'}
+<div class="card mb-3 shadow-sm">
+    <div class="card-body">
+        <h5 class="card-title">${categoria.nome}</h5>
+
+        <a class="btn btn-primary btn-sm" href="@{Categorias.editar(categoria.id)}">
+            Editar
+        </a>
+
+        #{if session['perfilUsuario'] == 'ADMIN'}
+            <a class="btn btn-danger btn-sm"
+               href="@{Categorias.remover(categoria.id)}"
+               onclick="return confirm('Deseja remover esta categoria?');">
+                Remover
+            </a>
+        #{/if}
+    </div>
+</div>
+#{/list}
+
+#{else}
+<div class="alert alert-info">Nenhuma categoria cadastrada.</div>
+#{/else}

@@ -1,0 +1,44 @@
+#{extends 'main.html' /}
+#{set title:'Farmatech' /}
+
+<div class="text-center mt-5">
+    <h1 class="text-success">Farmatech</h1>
+    <p class="lead">Sistema de Gerenciamento de Medicamentos</p>
+    <p>Bem-vindo, <strong>${session['usuarioLogado']}</strong>!</p>
+</div>
+
+<div class="row mt-4 g-4">
+
+    <div class="col-md-6">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body text-center">
+                <h3>Medicamentos</h3>
+                <p>Cadastre, pesquise, edite e remova medicamentos.</p>
+                <a class="btn btn-success" href="@{Medicamentos.listar()}">
+                    Acessar medicamentos
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body text-center">
+                <h3>Categorias</h3>
+                <p>Organize os medicamentos por categoria.</p>
+                <a class="btn btn-success" href="@{Categorias.listar()}">
+                    Acessar categorias
+                </a>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="alert alert-light border mt-5">
+    <strong>Perfil atual:</strong> ${session['perfilUsuario']}
+    <br>
+    <span class="text-muted">
+        A exclusão de registros é uma funcionalidade restrita ao perfil ADMIN.
+    </span>
+</div>

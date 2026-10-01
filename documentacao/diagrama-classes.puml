@@ -1,0 +1,47 @@
+@startuml
+hide methods
+skinparam classAttributeIconSize 0
+
+class Usuario {
+  id : Long
+  login : String
+  senha : String
+  nome : String
+  email : String
+}
+
+class Perfil {
+  id : Long
+  nome : String
+}
+
+class Categoria {
+  id : Long
+  nome : String
+  ativa : Boolean
+}
+
+class Medicamento {
+  id : Long
+  nome : String
+  descricao : String
+  preco : BigDecimal
+  qtEstoque : Integer
+  ativo : boolean
+}
+
+Usuario "N" --> "1" Perfil : possui
+Medicamento "N" --> "1" Categoria : pertence a
+
+note right of Usuario
+Autenticação por login e senha.
+A sessão guarda o login e o perfil.
+end note
+
+note right of Medicamento
+Cadastro principal do sistema.
+O histórico de cadastro é mantido
+na sessão, sem nova persistência.
+end note
+
+@enduml

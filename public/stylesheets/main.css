@@ -1,0 +1,155 @@
+body{
+    font-family:'Segoe UI',sans-serif;
+    background:#f4f6f9;
+    color:#333;
+}
+
+/* Título */
+h1{
+    color:#198754;
+    font-weight:bold;
+    margin-bottom:25px;
+}
+
+h2{
+    color:#198754;
+    margin-bottom:15px;
+}
+
+/* Links */
+a{
+    text-decoration:none;
+}
+
+a:hover{
+    text-decoration:none;
+}
+
+/* Botões */
+button,
+.btn{
+    background:#198754;
+    color:#fff;
+    border:none;
+    border-radius:8px;
+    padding:10px 18px;
+    transition:.3s;
+}
+
+button:hover,
+.btn:hover{
+    background:#157347;
+    color:white;
+}
+
+/* Inputs */
+input,
+select,
+textarea{
+    width:100%;
+    padding:10px;
+    margin-top:5px;
+    margin-bottom:15px;
+    border:1px solid #ced4da;
+    border-radius:8px;
+}
+
+input:focus,
+select:focus,
+textarea:focus{
+    outline:none;
+    border-color:#198754;
+    box-shadow:0 0 5px rgba(25,135,84,.3);
+}
+
+/* Formulários */
+form{
+    background:#fff;
+    padding:20px;
+    border-radius:12px;
+    box-shadow:0 2px 10px rgba(0,0,0,.08);
+    margin-bottom:30px;
+}
+
+/* Cards dos medicamentos */
+.medicamento{
+    background:#fff;
+    border-radius:12px;
+    box-shadow:0 2px 10px rgba(0,0,0,.08);
+    padding:20px;
+    margin-bottom:20px;
+    border-left:6px solid #198754;
+    transition:.3s;
+}
+
+.medicamento:hover{
+    transform:translateY(-3px);
+    box-shadow:0 8px 18px rgba(0,0,0,.15);
+}
+
+.medicamento h3{
+    color:#198754;
+    margin-bottom:15px;
+}
+
+.medicamento p{
+    margin-bottom:8px;
+}
+
+/* Botões editar/remover */
+.acoes{
+    margin-top:20px;
+}
+
+.acoes a{
+    display:inline-block;
+    padding:8px 14px;
+    border-radius:6px;
+    margin-right:10px;
+    color:white;
+}
+
+.acoes a:first-child{
+    background:#0d6efd;
+}
+
+.acoes a:last-child{
+    background:#dc3545;
+}
+
+/* Linha */
+hr{
+    border-top:1px solid #ddd;
+}
+
+/* Responsivo */
+@media(max-width:768px){
+
+.container{
+    width:95%;
+}
+
+form{
+    padding:15px;
+}
+
+}
+
+
+
+/* Ajustes da 3ª unidade */
+.card {
+    border: 0;
+    border-radius: 12px;
+}
+
+.navbar .btn {
+    width: auto;
+}
+
+.navbar form {
+    background: transparent;
+    padding: 0;
+    box-shadow: none;
+    margin-bottom: 0;
+}

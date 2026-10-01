@@ -1,0 +1,27 @@
+#{extends 'main.html' /}
+#{set title:'Editar Categoria' /}
+
+<div class="card shadow-sm">
+    <div class="card-body">
+
+        <h1 class="h3 text-success mb-4">Editar Categoria</h1>
+
+        #{form @Categorias.atualizar()}
+
+            <input type="hidden" name="categoria.id" value="${categoria.id}">
+
+            <div class="mb-3">
+                <label class="form-label">Nome</label>
+                <input class="form-control"
+                       type="text"
+                       name="categoria.nome"
+                       value="${categoria.nome}"
+                       required>
+            </div>
+
+            <button class="btn btn-success" type="submit">Atualizar</button>
+            <a class="btn btn-secondary" href="@{Categorias.listar()}">Voltar</a>
+
+        #{/form}
+    </div>
+</div>

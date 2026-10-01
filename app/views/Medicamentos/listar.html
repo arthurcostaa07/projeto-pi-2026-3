@@ -1,0 +1,68 @@
+#{extends 'main.html' /}
+#{set title:'Medicamentos' /}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="mb-0">Medicamentos</h1>
+
+    <a href="@{Medicamentos.form()}" class="btn btn-success">
+        Cadastrar medicamento
+    </a>
+</div>
+
+#{form @Medicamentos.pesquisar(), class:'d-flex mb-4'}
+    <input type="text"
+           name="nome"
+           class="form-control me-2"
+           placeholder="Pesquisar medicamento">
+    <button type="submit" class="btn btn-primary">
+        Pesquisar
+    </button>
+#{/form}
+
+#{if historicoMedicamentos && historicoMedicamentos.size() > 0}
+<div class="card border-success mb-4">
+    <div class="card-header bg-success text-white">
+        Últimos medicamentos cadastrados por você
+    </div>
+    <div class="card-body">
+        <ol class="mb-0">
+            #{list items:historicoMedicamentos, as:'nomeHistorico'}
+                <li>${nomeHistorico}</li>
+            #{/list}
+        </ol>
+    </div>
+</div>
+#{/if}
+
+#{list items:medicamentos, as:'medicamento'}
+<div class="card mb-3 shadow-sm">
+    <div class="card-body">
+
+        <h4 class="card-title text-success">${medicamento.nome}</h4>
+
+        <p><strong>Descrição:</strong> ${medicamento.descricao}</p>
+        <p><strong>Preço:</strong> R$ ${medicamento.preco}</p>
+        <p><strong>Estoque:</strong> ${medicamento.qtEstoque}</p>
+        <p><strong>Categoria:</strong> ${medicamento.categoria?.nome}</p>
+
+        <a href="@{Medicamentos.editar(medicamento.id)}" class="btn btn-warning btn-sm">
+            Editar
+        </a>
+
+        #{if session['perfilUsuario'] == 'ADMIN'}
+            <a href="@{Medicamentos.remover(medicamento.id)}"
+               class="btn btn-danger btn-sm"
+               onclick="return confirm('Deseja remover este medicamento?');">
+                Remover
+            </a>
+        #{/if}
+
+    </div>
+</div>
+#{/list}
+
+#{else}
+<div class="alert alert-info">
+    Nenhum medicamento encontrado.
+</div>
+#{/else}

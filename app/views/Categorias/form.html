@@ -1,0 +1,21 @@
+#{extends 'main.html' /}
+#{set title:'Cadastrar Categoria' /}
+
+<div class="card shadow-sm">
+    <div class="card-body">
+
+        <h1 class="h3 text-success mb-4">Cadastrar Categoria</h1>
+
+        #{form @Categorias.salvar()}
+
+            <div class="mb-3">
+                <label class="form-label">Nome</label>
+                <input class="form-control" type="text" name="categoria.nome" required>
+            </div>
+
+            <button class="btn btn-success" type="submit">Salvar</button>
+            <a class="btn btn-secondary" href="@{Categorias.listar()}">Voltar</a>
+
+        #{/form}
+    </div>
+</div>
