@@ -3,7 +3,7 @@ package controllers;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
+import play.data.validation.Valid;
 import models.Categoria;
 import models.Medicamento;
 import play.mvc.Controller;
@@ -32,52 +32,30 @@ public class Medicamentos extends Controller {
         render(medicamentos, historicoMedicamentos);
     }
 
-    public static void salvar(Medicamento medicamento) {
+    public static void salvar(@Valid Medicamento medicamento) {
 
-        if (medicamento == null) {
-            flash.error("Não foi possível cadastrar o medicamento.");
-            form();
-            return;
-        }
+        if (validation.hasErrors()) {
 
-        if (medicamento.nome == null || medicamento.nome.trim().isEmpty()) {
-            flash.error("Informe o nome do medicamento.");
-            form();
-            return;
-        }
+            params.flash();
+            validation.keep();
 
-        if (medicamento.descricao == null || medicamento.descricao.trim().isEmpty()) {
-            flash.error("Informe a descrição do medicamento.");
             form();
-            return;
-        }
 
-        if (medicamento.preco == null || medicamento.preco.doubleValue() < 0) {
-            flash.error("Informe um preço válido, maior ou igual a zero.");
-            form();
-            return;
-        }
-
-        if (medicamento.qtEstoque == null || medicamento.qtEstoque < 0) {
-            flash.error("Informe uma quantidade de estoque válida, maior ou igual a zero.");
-            form();
-            return;
-        }
-
-        if (medicamento.categoria == null) {
-            flash.error("Você tentou cadastrar um medicamento sem categoria.");
-            form();
             return;
         }
 
         medicamento.nome = medicamento.nome.trim();
+
         medicamento.descricao = medicamento.descricao.trim();
+
         medicamento.ativo = true;
+
         medicamento.save();
 
         adicionarAoHistorico(medicamento.nome);
 
         flash.success("Medicamento cadastrado com sucesso.");
+
         listar();
     }
 

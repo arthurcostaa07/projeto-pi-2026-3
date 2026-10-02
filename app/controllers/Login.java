@@ -1,6 +1,7 @@
 package controllers;
 
 import models.Usuario;
+import play.data.validation.Required;
 import play.mvc.Controller;
 
 public class Login extends Controller {
@@ -9,7 +10,17 @@ public class Login extends Controller {
         render();
     }
 
-    public static void autenticar(String login, String senha) {
+    public static void autenticar(
+        @Required String login,
+        @Required String senha
+    ) {
+
+        if (validation.hasErrors()) {
+            params.flash();
+            validation.keep();
+            form();
+            return;
+        }
 
         if (!Usuario.existeUsuario(login, senha)) {
             flash.error("Usuário ou senha inválidos. Tente novamente!");
