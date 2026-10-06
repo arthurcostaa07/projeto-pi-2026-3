@@ -3,6 +3,7 @@ package controllers;
 import java.util.List;
 
 import models.Categoria;
+import play.data.validation.Valid;
 import play.mvc.Controller;
 import play.mvc.With;
 
@@ -15,19 +16,21 @@ public class Categorias extends Controller {
     }
 
     
-    public static void salvar(Categoria categoria) {
+    public static void salvar(@Valid Categoria categoria) {
+if (validation.hasErrors()) {
+	params.flash();
+	validation.keep();
+	form();
+	return;
+	
+}
+	if (categoria == null) {
+		flash.error("Categoria invalida");
+		form();
+		return;
+	}
+	
 
-        if (categoria == null) {
-            flash.error("Categoria inválida.");
-            form();
-            return;
-        }
-
-        if (categoria.nome == null || categoria.nome.trim().isEmpty()) {
-            flash.error("Informe o nome da categoria.");
-            form();
-            return;
-        }
 
         categoria.nome = categoria.nome.trim();
 
