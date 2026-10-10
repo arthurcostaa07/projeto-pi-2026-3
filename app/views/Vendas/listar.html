@@ -1,0 +1,76 @@
+
+#{extends 'main.html' /}
+#{set title:'Vendas' /}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h1 class="mb-1 text-success">Vendas</h1>
+        <p class="text-muted mb-0">
+            Consulte as vendas registradas no sistema.
+        </p>
+    </div>
+
+    <form action="@{Vendas.iniciarVenda()}" method="POST">
+        <button type="submit" class="btn btn-success">
+            + Cadastrar venda
+        </button>
+    </form>
+</div>
+
+#{if vendas && vendas.size() > 0}
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped table-hover align-middle">
+                    <thead class="table-success">
+                        <tr>
+                            <th>Número</th>
+                            <th>Data</th>
+                            <th>Atendente</th>
+                            <th>Total</th>
+                            <th>Pagamento</th>
+                            <th>Status</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        #{list items:vendas, as:'venda'}
+                            <tr>
+                                <td>${venda.id}</td>
+                                <td>${venda.data}</td>
+                                <td>${venda.atendente?.login ?: 'Não informado'}</td>
+                                <td>R$ ${venda.total ?: 0}</td>
+                                <td>${venda.formaPagamento ?: '—'}</td>
+                                <td>
+                                    #{if venda.status == 'FINALIZADA'}
+                                        <span class="badge bg-success">
+                                            Finalizada
+                                        </span>
+                                    #{/if}
+                                    #{else}
+                                        <span class="badge bg-warning text-dark">
+                                            Em andamento
+                                        </span>
+                                    #{/else}
+                                </td>
+                                <td>
+                                    <a href="@{Vendas.detalhes(venda.id)}"
+                                       class="btn btn-sm btn-outline-success">
+                                        Detalhes
+                                    </a>
+                                </td>
+                            </tr>
+                        #{/list}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+#{/if}
+#{else}
+    <div class="alert alert-info">
+        Nenhuma venda encontrada. Clique em
+        <strong>Cadastrar venda</strong> para registrar a primeira.
+    </div>
+#{/else}

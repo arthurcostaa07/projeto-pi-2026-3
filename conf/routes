@@ -1,9 +1,11 @@
 # Routes
-# This file defines all application routes (Higher priority routes first)
-# ~~~~
-
-# Home page
+# Página inicial
 GET     /                                       Application.index
+
+# Login
+GET     /login                                  Login.form
+POST    /login                                  Login.autenticar
+GET     /sair                                   Login.sair
 
 # Medicamentos
 GET     /medicamentos                           Medicamentos.listar
@@ -11,15 +13,29 @@ GET     /medicamentos/form                      Medicamentos.form
 POST    /medicamentos/salvar                    Medicamentos.salvar
 
 # Categorias
-GET     /categorias/form                        Categorias.form
-POST    /categorias/salvar                      Categorias.salvar
-GET     /categorias/listar                      Categorias.listar
+GET     /categorias/form                       Categorias.form
+POST    /categorias/salvar                     Categorias.salvar
+GET     /categorias/listar                     Categorias.listar
 
-# Ignore favicon requests
-GET     /favicon.ico                            404
+# Vendas
+GET     /vendas                                 Vendas.listar
+GET     /vendas/form                            Vendas.form
+GET     /vendas/iniciar                         Vendas.iniciarVenda
+POST    /vendas/iniciar                         Vendas.iniciarVenda
+POST    /vendas/adicionar-item                  Vendas.adicionarItem
+POST    /vendas/remover-item                    Vendas.removerItem
+POST    /vendas/finalizar                       Vendas.finalizarVenda
+GET     /vendas/detalhes                        Vendas.detalhes
 
-# Map static resources
+
+# Estoque
+GET     /estoque                         Estoque.listar
+GET     /estoque/movimentar              Estoque.movimentar
+POST    /estoque/movimentar              Estoque.salvarMovimentacao
+GET     /estoque/historico               Estoque.historico
+
+# Arquivos estáticos
 GET     /public/                                staticDir:public
 
-# Catch all — sempre por último
+# Rota genérica — sempre por último
 *       /{controller}/{action}                  {controller}.{action}

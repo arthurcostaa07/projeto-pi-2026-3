@@ -1,44 +1,206 @@
+
 #{extends 'main.html' /}
-#{set title:'Farmatech' /}
+#{set title:'Painel - Farmatech' /}
 
-<div class="text-center mt-5">
-    <h1 class="text-success">Farmatech</h1>
-    <p class="lead">Sistema de Gerenciamento de Medicamentos</p>
-    <p>Bem-vindo, <strong>${session['usuarioLogado']}</strong>!</p>
-</div>
+<div class="dashboard">
 
-<div class="row mt-4 g-4">
-
-    <div class="col-md-6">
-        <div class="card h-100 shadow-sm">
-            <div class="card-body text-center">
-                <h3>Medicamentos</h3>
-                <p>Cadastre, pesquise, edite e remova medicamentos.</p>
-                <a class="btn btn-success" href="@{Medicamentos.listar()}">
-                    Acessar medicamentos
-                </a>
-            </div>
+    <div class="dashboard-header mb-4">
+        <div>
+            <span class="dashboard-eyebrow">PAINEL DE CONTROLE</span>
+            <h1>Olá, ${session['usuarioLogado']}!</h1>
+            <p>Acompanhe os indicadores e a situação da farmácia.</p>
+        </div>
+        <div class="dashboard-date">
+            <strong>Farmatech</strong>
+            <span>Gestão farmacêutica</span>
         </div>
     </div>
 
-    <div class="col-md-6">
-        <div class="card h-100 shadow-sm">
-            <div class="card-body text-center">
-                <h3>Categorias</h3>
-                <p>Organize os medicamentos por categoria.</p>
-                <a class="btn btn-success" href="@{Categorias.listar()}">
-                    Acessar categorias
-                </a>
+    <div class="row g-3 mb-4">
+
+        <div class="col-12 col-md-6 col-xl-3">
+            <div class="dashboard-card metric-green">
+                <div class="metric-top">
+                    <span>Medicamentos ativos</span>
+                    <span class="metric-icon">+</span>
+                </div>
+                <div class="metric-number">${totalMedicamentos}</div>
+                <a href="@{Medicamentos.listar()}">Consultar medicamentos →</a>
             </div>
+        </div>
+
+        <div class="col-12 col-md-6 col-xl-3">
+            <div class="dashboard-card metric-orange">
+                <div class="metric-top">
+                    <span>Estoque baixo</span>
+                    <span class="metric-icon">!</span>
+                </div>
+                <div class="metric-number">${totalEstoqueBaixo}</div>
+                <span>5 unidades ou menos</span>
+                <a href="@{Estoque.listar()}">Ver estoque →</a>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-6 col-xl-3">
+            <div class="dashboard-card metric-red">
+                <div class="metric-top">
+                    <span>Sem estoque</span>
+                    <span class="metric-icon">×</span>
+                </div>
+                <div class="metric-number">${totalSemEstoque}</div>
+                <span>Medicamentos com saldo zero</span>
+                <a href="@{Estoque.listar()}">Ver produtos →</a>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-6 col-xl-3">
+            <div class="dashboard-card metric-blue">
+                <div class="metric-top">
+                    <span>Faturamento de hoje</span>
+                    <span class="metric-icon">$</span>
+                </div>
+                <div class="metric-number metric-money">
+                    R$ ${faturamentoHoje}
+                </div>
+                <span>${quantidadeVendasHoje} venda(s) finalizada(s)</span>
+                <a href="@{Vendas.listar()}">Consultar vendas →</a>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="row g-4 mb-4">
+
+        <div class="col-12 col-lg-7">
+            <div class="dashboard-panel h-100">
+                <div class="panel-heading">
+                    <div>
+                        <h2>Atenção ao estoque</h2>
+                        <p>Medicamentos com 5 unidades ou menos</p>
+                    </div>
+                    <a href="@{Estoque.listar()}">Ver tudo</a>
+                </div>
+
+                #{if estoqueBaixo && estoqueBaixo.size() > 0}
+                    <div class="table-responsive">
+                        <table class="table dashboard-table align-middle">
+                            <thead>
+                                <tr>
+                                    <th>Medicamento</th>
+                                    <th>Quantidade</th>
+                                    <th>Situação</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                #{list items:estoqueBaixo, as:'medicamento'}
+                                    <tr>
+                                        <td>
+                                            <strong>${medicamento.nome}</strong>
+                                        </td>
+                                        <td>${medicamento.qtEstoque}</td>
+                                        <td>
+                                            #{if medicamento.qtEstoque == 0}
+                                                <span class="status-pill status-red">
+                                                    Sem estoque
+                                                </span>
+                                            #{/if}
+                                            #{else}
+                                                <span class="status-pill status-orange">
+                                                    Estoque baixo
+                                                </span>
+                                            #{/else}
+                                        </td>
+                                    </tr>
+                                #{/list}
+                            </tbody>
+                        </table>
+                    </div>
+                #{/if}
+                #{else}
+                    <div class="empty-state">
+                        <div class="empty-icon">✓</div>
+                        <strong>Estoque em dia!</strong>
+                        <p>Nenhum medicamento está com 5 unidades ou menos.</p>
+                    </div>
+                #{/else}
+            </div>
+        </div>
+
+        <div class="col-12 col-lg-5">
+            <div class="dashboard-panel h-100">
+                <div class="panel-heading">
+                    <div>
+                        <h2>Acesso rápido</h2>
+                        <p>Principais funções do sistema</p>
+                    </div>
+                </div>
+
+                <div class="quick-links">
+
+                    <a href="@{Medicamentos.listar()}" class="quick-link">
+                        <span class="quick-icon quick-green">M</span>
+                        <span>
+                            <strong>Medicamentos</strong>
+                            <small>Pesquisar e consultar produtos</small>
+                        </span>
+                        <span class="quick-arrow">›</span>
+                    </a>
+
+                    #{if session['perfilUsuario'] == 'ADMIN'}
+                        <a href="@{Medicamentos.form()}" class="quick-link">
+                            <span class="quick-icon quick-blue">+</span>
+                            <span>
+                                <strong>Cadastrar medicamento</strong>
+                                <small>Adicionar um novo produto</small>
+                            </span>
+                            <span class="quick-arrow">›</span>
+                        </a>
+                    #{/if}
+
+                    <a href="@{Vendas.listar()}" class="quick-link">
+                        <span class="quick-icon quick-purple">V</span>
+                        <span>
+                            <strong>Vendas</strong>
+                            <small>Registrar e consultar vendas</small>
+                        </span>
+                        <span class="quick-arrow">›</span>
+                    </a>
+
+                    <a href="@{Estoque.listar()}" class="quick-link">
+                        <span class="quick-icon quick-orange">E</span>
+                        <span>
+                            <strong>Controle de estoque</strong>
+                            <small>Consultar quantidades disponíveis</small>
+                        </span>
+                        <span class="quick-arrow">›</span>
+                    </a>
+
+                    #{if session['perfilUsuario'] == 'ADMIN'}
+                        <a href="@{Categorias.listar()}" class="quick-link">
+                            <span class="quick-icon quick-green">C</span>
+                            <span>
+                                <strong>Categorias</strong>
+                                <small>Organizar os medicamentos</small>
+                            </span>
+                            <span class="quick-arrow">›</span>
+                        </a>
+                    #{/if}
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="dashboard-footer">
+        <div>
+            <strong>Farmatech</strong>
+            <span>Sistema de Gerenciamento de Medicamentos</span>
+        </div>
+        <div>
+            Perfil conectado:
+            <strong>${session['perfilUsuario']}</strong>
         </div>
     </div>
 
-</div>
-
-<div class="alert alert-light border mt-5">
-    <strong>Perfil atual:</strong> ${session['perfilUsuario']}
-    <br>
-    <span class="text-muted">
-        A exclusão de registros é uma funcionalidade restrita ao perfil ADMIN.
-    </span>
 </div>

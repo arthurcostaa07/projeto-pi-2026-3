@@ -1,0 +1,70 @@
+
+#{extends 'main.html' /}
+#{set title:'Estoque' /}
+
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="text-success">Controle de estoque</h1>
+            <p class="text-muted">Consulte as quantidades disponíveis.</p>
+        </div>
+        <div>
+            <a href="@{Estoque.historico()}" class="btn btn-outline-success">
+                Histórico
+            </a>
+            #{if session.get('perfilUsuario') == 'ADMIN'}
+                <a href="@{Estoque.movimentar()}" class="btn btn-success">
+                    Movimentar estoque
+                </a>
+            #{/if}
+        </div>
+    </div>
+
+    #{if flash.error}
+        <div class="alert alert-danger">${flash.error}</div>
+    #{/if}
+    #{if flash.success}
+        <div class="alert alert-success">${flash.success}</div>
+    #{/if}
+
+    <div class="card shadow-sm">
+        <div class="card-body table-responsive">
+            <table class="table table-striped table-hover align-middle">
+                <thead class="table-success">
+                    <tr>
+                        <th>Medicamento</th>
+                        <th>Categoria</th>
+                        <th>Preço</th>
+                        <th>Quantidade</th>
+                        <th>Situação</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    #{list items:medicamentos, as:'medicamento'}
+                        <tr>
+                            <td>${medicamento.nome}</td>
+                            <td>${medicamento.categoria?.nome ?: 'Não informada'}</td>
+                            <td>R$ ${medicamento.preco}</td>
+                            <td>${medicamento.qtEstoque}</td>
+                            <td>
+                                #{if medicamento.qtEstoque == null || medicamento.qtEstoque <= 5}
+                                    <span class="badge bg-danger">Estoque baixo</span>
+                                #{/if}
+                                #{else}
+                                    <span class="badge bg-success">Disponível</span>
+                                #{/else}
+                            </td>
+                        </tr>
+                    #{/list}
+                    #{else}
+                        <tr>
+                            <td colspan="5" class="text-center text-muted">
+                                Nenhum medicamento cadastrado.
+                            </td>
+                        </tr>
+                    #{/else}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

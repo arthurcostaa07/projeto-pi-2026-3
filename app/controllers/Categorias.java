@@ -11,11 +11,13 @@ import play.mvc.With;
 public class Categorias extends Controller {
 
   
+    @Administrador
     public static void form() {
         render();
     }
 
     
+    @Administrador
     public static void salvar(@Valid Categoria categoria) {
 if (validation.hasErrors()) {
 	params.flash();
@@ -68,6 +70,7 @@ if (validation.hasErrors()) {
     }
 
     
+    @Administrador
     public static void editar(Long id) {
 
         if (id == null) {
@@ -88,6 +91,7 @@ if (validation.hasErrors()) {
     }
 
     
+    @Administrador
     public static void atualizar(Categoria categoria) {
 
         if (categoria == null) {

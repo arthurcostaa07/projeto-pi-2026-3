@@ -1,0 +1,108 @@
+ #{extends 'main.html' /}
+  #{set title:'Detalhes da venda' /}
+
+    <div
+	class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
+	<div>
+    <h1 class="text-success mb-1">Venda ${venda.id}</h1>
+    <p class="text-muted mb-0">Consulte os dados e os produtos destavenda.</p>
+	</div>
+
+	<a href="@{Vendas.listar()}" class="btn btn-outline-secondary"> Voltar para vendas </a>
+    </div>
+
+    <div class="card shadow-sm mb-4">
+	<div class="card-body">
+    <div class="row g-3">
+	<div class="col-md-6">
+    <strong>Data:</strong>
+    <div>${venda.data}</div>
+	</div>
+
+	<div class="col-md-6">
+	<strong>Atendente:</strong>
+	<div>${venda.atendente?.login ?: 'Não informado'}</div>
+	</div>
+
+    <div class="col-md-6">
+	<strong>Status:</strong>
+	<div>
+	#{if venda.status == 'FINALIZADA'} 
+	<span class="badge bg-success">Finalizada</span>
+	#{/if} #{else} <span class="badge bg-warning text-dark">Emandamento</span> #{/else}
+	</div></div>
+
+	<div class="col-md-6">
+	<strong>Forma de pagamento:</strong>
+	<div>${venda.formaPagamento ?: 'Não informado'}</div>
+	</div>
+	</div>
+
+	<hr>
+
+	<h3 class="text-success">Total: R$ ${venda.total}</h3>
+	</div>
+    </div>
+
+    <div class="card shadow-sm mb-4">
+	<div class="card-body">
+    <h4 class="mb-3">Produtos da venda</h4>
+
+	#{if itens && itens.size() > 0}
+	<div class="table-responsive">
+	<table class="table table-striped align-middle">
+	<thead class="table-success">
+	<tr>
+	<th>Medicamento</th>
+	<th>Quantidade</th>
+	<th>Preço unitário</th>
+	<th>Subtotal</th>
+	</tr>
+	</thead>
+
+	<tbody>
+					#{list items:itens, as:'item'}
+					<tr>
+						<td>${item.medicamento.nome}</td>
+						<td>${item.quantidade}</td>
+						<td>R$ ${item.precoUnitario}</td>
+						<td>R$ ${item.subtotal}</td>
+					</tr>
+					#{/list}
+				</tbody>
+			</table>
+		</div>
+		#{/if} #{else}
+		<p class="text-muted">Nenhum produto registrado nesta venda.</p>
+		#{/else}
+	</div>
+</div>
+
+<div class="card shadow-sm">
+	<div class="card-body">
+		<h5 class="mb-3">Ações da venda</h5>
+
+		<div class="d-flex flex-wrap gap-2">
+
+			#{if venda.status == 'EM_ANDAMENTO'} <a
+				href="@{Vendas.form(venda.id)}" class="btn btn-primary"> Editar
+				venda </a> #{/if} #{if podeExcluir}
+			<form action="@{Vendas.excluir()}" method="POST"
+				onsubmit="return confirm('Tem certeza que deseja excluir esta venda? Esta ação não pode ser desfeita.');">
+
+				<input type="hidden" name="vendaId" value="${venda.id}">
+
+				<button type="submit" class="btn btn-danger">Excluir venda
+				</button>
+			</form>
+			#{/if}
+
+		</div>
+
+		#{if venda.status == 'FINALIZADA'}
+		<p class="text-muted small mt-3 mb-0">A venda finalizada não pode
+			ser editada diretamente. Sua exclusão é restrita ao administrador e
+			restaura as quantidades dos medicamentos no estoque.</p>
+		#{/if}
+	</div>
+</div>

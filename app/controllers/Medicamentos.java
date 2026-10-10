@@ -12,6 +12,7 @@ import play.mvc.With;
 @With(Seguranca.class)
 public class Medicamentos extends Controller {
 
+    @Administrador
     public static void form() {
 
         List<Categoria> categorias = Categoria.find(
@@ -32,6 +33,7 @@ public class Medicamentos extends Controller {
         render(medicamentos, historicoMedicamentos);
     }
 
+    @Administrador
     public static void salvar(@Valid Medicamento medicamento) {
 
         if (validation.hasErrors()) {
@@ -59,6 +61,7 @@ public class Medicamentos extends Controller {
         listar();
     }
 
+    @Administrador
     public static void editar(Long id) {
 
         Medicamento medicamento = Medicamento.findById(id);
@@ -76,6 +79,7 @@ public class Medicamentos extends Controller {
         render(medicamento, categorias);
     }
 
+    @Administrador
     public static void atualizar(Medicamento medicamento) {
 
         if (medicamento == null) {
@@ -146,6 +150,7 @@ public class Medicamentos extends Controller {
         if (nome == null) {
             nome = "";
         }
+        flash.put("nome", nome);
 
         List<Medicamento> medicamentos = Medicamento.find(
             "byNomeLikeAndAtivo",

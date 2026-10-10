@@ -1,0 +1,275 @@
+
+#{extends 'main.html' /}
+#{set title:'Registrar venda' /}
+
+<div class="container py-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="text-success">Registrar venda</h1>
+            <p class="text-muted">Adicione medicamentos ao carrinho.</p>
+        </div>
+
+        <a href="@{Vendas.listar()}" class="btn btn-outline-secondary">
+            Voltar para vendas
+        </a>
+    </div>
+
+    #{if venda}
+        <div class="card shadow-sm mb-4">
+            <div class="card-body">
+
+                <h5>Venda em andamento</h5>
+                <p><strong>Venda:</strong> ${venda.id}</p>
+                <p><strong>Total:</strong> R$ ${venda.total}</p>
+
+                <form action="@{Vendas.adicionarItem()}" method="POST">
+                    <input type="hidden" name="vendaId" value="${venda.id}">
+
+                    <div class="mb-3">
+                        <label for="buscaMedicamento" class="form-label">
+                            Medicamento
+                        </label>
+
+                        <input
+                            type="text"
+                            id="buscaMedicamento"
+                            class="form-control"
+                            placeholder="Digite o nome do medicamento..."
+                            autocomplete="off"
+                            required>
+
+                        <input
+                            type="hidden"
+                            name="medicamentoId"
+                            id="medicamentoId">
+
+                        <div
+                            id="resultadosMedicamentos"
+                            class="list-group mt-1"
+                            style="display:none; max-height:220px; overflow-y:auto;">
+
+                            #{list items:medicamentos, as:'medicamento'}
+                                <button
+                                    type="button"
+                                    class="list-group-item list-group-item-action resultado-medicamento"
+                                    data-id="${medicamento.id}"
+                                    data-nome="${medicamento.nome.toLowerCase()}">
+
+                                    <strong>${medicamento.nome}</strong>
+
+                                    <span class="d-block small text-muted">
+                                        R$ ${medicamento.preco}
+                                        — Estoque: ${medicamento.qtEstoque}
+                                    </span>
+                                </button>
+                            #{/list}
+
+                        </div>
+
+                        <div
+                            id="nenhumMedicamento"
+                            class="form-text text-danger"
+                            style="display:none;">
+                            Nenhum medicamento encontrado.
+                        </div>
+
+                        <div
+                            id="medicamentoSelecionado"
+                            class="form-text text-success"
+                            style="display:none;">
+                            Medicamento selecionado.
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="quantidade" class="form-label">
+                            Quantidade
+                        </label>
+
+                        <input
+                            type="number"
+                            id="quantidade"
+                            name="quantidade"
+                            class="form-control"
+                            min="1"
+                            value="1"
+                            required>
+                    </div>
+
+                    <button type="submit" class="btn btn-success">
+                        Adicionar medicamento
+                    </button>
+                </form>
+
+            </div>
+        </div>
+
+        <div class="card shadow-sm mb-4">
+            <div class="card-body">
+
+                <h5>Itens da venda</h5>
+
+                #{if itens && itens.size() > 0}
+                    <div class="table-responsive">
+                        <table class="table table-striped align-middle">
+                            <thead class="table-success">
+                                <tr>
+                                    <th>Medicamento</th>
+                                    <th>Quantidade</th>
+                                    <th>Preço unitário</th>
+                                    <th>Subtotal</th>
+                                    <th>Ação</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                #{list items:itens, as:'item'}
+                                    <tr>
+                                        <td>${item.medicamento.nome}</td>
+                                        <td>${item.quantidade}</td>
+                                        <td>R$ ${item.precoUnitario}</td>
+                                        <td>R$ ${item.subtotal}</td>
+                                        <td>
+                                            <form
+                                                action="@{Vendas.removerItem()}"
+                                                method="POST">
+
+                                                <input
+                                                    type="hidden"
+                                                    name="itemId"
+                                                    value="${item.id}">
+
+                                                <button
+                                                    type="submit"
+                                                    class="btn btn-sm btn-outline-danger">
+                                                    Remover
+                                                </button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                #{/list}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <form action="@{Vendas.finalizarVenda()}" method="POST">
+                        <input
+                            type="hidden"
+                            name="vendaId"
+                            value="${venda.id}">
+
+                        <div class="mb-3">
+                            <label for="formaPagamento" class="form-label">
+                                Forma de pagamento
+                            </label>
+
+                            <select
+                                id="formaPagamento"
+                                name="formaPagamento"
+                                class="form-select"
+                                required>
+
+                                <option value="">Selecione</option>
+                                <option value="Dinheiro">Dinheiro</option>
+                                <option value="Pix">Pix</option>
+                                <option value="Cartão de débito">
+                                    Cartão de débito
+                                </option>
+                                <option value="Cartão de crédito">
+                                    Cartão de crédito
+                                </option>
+                            </select>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">
+                            Finalizar venda
+                        </button>
+                    </form>
+
+                #{/if}
+                #{else}
+                    <p class="text-muted">
+                        Nenhum medicamento adicionado ainda.
+                    </p>
+                #{/else}
+
+            </div>
+        </div>
+    #{/if}
+
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    var busca = document.getElementById("buscaMedicamento");
+    var idSelecionado = document.getElementById("medicamentoId");
+    var resultados = document.getElementById("resultadosMedicamentos");
+    var aviso = document.getElementById("nenhumMedicamento");
+    var mensagemSelecionado = document.getElementById("medicamentoSelecionado");
+
+    if (!busca || !idSelecionado || !resultados || !aviso) {
+        return;
+    }
+
+    var itens = document.querySelectorAll(".resultado-medicamento");
+
+    function filtrarMedicamentos() {
+        var termo = busca.value.toLocaleLowerCase("pt-BR").trim();
+        var encontrados = 0;
+
+        idSelecionado.value = "";
+        mensagemSelecionado.style.display = "none";
+
+        itens.forEach(function (item) {
+            var nome = item.getAttribute("data-nome") || "";
+            var corresponde = termo.length > 0 && nome.indexOf(termo) !== -1;
+
+            item.style.display = corresponde ? "" : "none";
+
+            if (corresponde) {
+                encontrados++;
+            }
+        });
+
+        resultados.style.display = termo ? "block" : "none";
+
+        aviso.style.display =
+            termo && encontrados === 0 ? "block" : "none";
+    }
+
+    busca.addEventListener("input", filtrarMedicamentos);
+
+    itens.forEach(function (item) {
+        item.addEventListener("click", function () {
+
+            idSelecionado.value = item.getAttribute("data-id");
+
+            busca.value = item.querySelector("strong").textContent.trim();
+
+            resultados.style.display = "none";
+            aviso.style.display = "none";
+            mensagemSelecionado.style.display = "block";
+        });
+    });
+
+    busca.addEventListener("keydown", function (event) {
+        if (event.key === "Escape") {
+            resultados.style.display = "none";
+        }
+
+        if (event.key === "ArrowDown") {
+            var primeiro = resultados.querySelector(
+                ".resultado-medicamento:not([style*='display: none'])"
+            );
+
+            if (primeiro) {
+                event.preventDefault();
+                primeiro.focus();
+            }
+        }
+    });
+
+});
+</script>

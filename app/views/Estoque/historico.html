@@ -1,0 +1,58 @@
+
+#{extends 'main.html' /}
+#{set title:'Histórico do estoque' /}
+
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="text-success">Histórico do estoque</h1>
+            <p class="text-muted">Entradas e saídas registradas.</p>
+        </div>
+        <a href="@{Estoque.listar()}" class="btn btn-outline-success">
+            Voltar ao estoque
+        </a>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body table-responsive">
+            <table class="table table-striped align-middle">
+                <thead class="table-success">
+                    <tr>
+                        <th>Data</th>
+                        <th>Medicamento</th>
+                        <th>Tipo</th>
+                        <th>Quantidade</th>
+                        <th>Responsável</th>
+                        <th>Observação</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    #{list items:movimentacoes, as:'mov'}
+                        <tr>
+                            <td>${mov.data?.format('dd/MM/yyyy HH:mm')}</td>
+                            <td>${mov.medicamento?.nome ?: 'Não informado'}</td>
+                            <td>
+                                #{if mov.tipo == 'ENTRADA'}
+                                    <span class="badge bg-success">Entrada</span>
+                                #{/if}
+                                #{else}
+                                    <span class="badge bg-danger">Saída</span>
+                                #{/else}
+                            </td>
+                            <td>${mov.quantidade}</td>
+                            <td>${mov.usuario?.login ?: 'Não informado'}</td>
+                            <td>${mov.observacao ?: '—'}</td>
+                        </tr>
+                    #{/list}
+                    #{else}
+                        <tr>
+                            <td colspan="6" class="text-center text-muted">
+                                Nenhuma movimentação registrada.
+                            </td>
+                        </tr>
+                    #{/else}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
